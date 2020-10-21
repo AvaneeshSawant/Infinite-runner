@@ -46,6 +46,7 @@ function setup() {
   invisibleGround = createSprite(200, 190, 400, 10);
   invisibleGround.visible = false;
 
+
   cloudsGroup = new Group();
   obstaclesGroup = new Group();
 
@@ -65,11 +66,15 @@ function draw() {
   background(180);
   text("Score: " + score, 500, 50);
   if (gameState === PLAY) {
-    camera.position.y = 180;
+     camera.position.x = trex.x +100 ;   
+     camera.position.y = trex.y ;   
+
 
     score = score + Math.round(getFrameRate() / 60);
-    
-    console.log(trex.y)
+
+    //console.log(trex.y)
+
+    ground.velocityX = -4;
 
     if (keyDown("space") && trex.y > 160.3) {
       trex.velocityY = -11;
@@ -80,6 +85,7 @@ function draw() {
     if (ground.x < 0) {
       ground.x = ground.width / 2;
     }
+
 
     if (obstaclesGroup.isTouching(trex)) {
       gameState = END;
@@ -96,6 +102,7 @@ function draw() {
     //set velocity of each game object to 0
     ground.velocityX = 0;
     trex.velocityY = 0;
+
     obstaclesGroup.setVelocityXEach(0);
     cloudsGroup.setVelocityXEach(0);
 
@@ -118,10 +125,13 @@ function draw() {
 function spawnClouds() {
   //write code here to spawn the clouds
   if (frameCount % 60 === 0) {
-    var cloud = createSprite(600, 120, 40, 10);
+    console.log("cloud is created");
+
+    var cloud = createSprite(400, 120, 40, 10);
     cloud.y = Math.round(random(80, 120));
     cloud.addImage(cloudImage);
     cloud.scale = 0.5;
+    cloud.velocityX = -5;
 
     //assign lifetime to the variable
     cloud.lifetime = 200;
@@ -138,8 +148,9 @@ function spawnClouds() {
 
 function spawnObstacles() {
   if (frameCount % 60 === 0) {
-    var obstacle = createSprite(600, 165, 10, 40);
-
+    var obstacle = createSprite(400, 165, 10, 40);
+    obstacle.velocityX = -6;
+    console.log("cloud is obstacle");
     //generate random obstacles
     var rand = Math.round(random(1, 6));
     switch (rand) {
@@ -168,7 +179,7 @@ function spawnObstacles() {
     //assign scale and lifetime to the obstacle           
     obstacle.scale = 0.5;
     obstacle.lifetime = 300;
-    
+
     //add each obstacle to the group
     obstaclesGroup.add(obstacle);
   }
@@ -176,14 +187,14 @@ function spawnObstacles() {
 
 function reset() {
   gameState = PLAY;
-  
+
   gameOver.visible = false;
   restart.visible = false;
-  
+
   obstaclesGroup.destroyEach();
   cloudsGroup.destroyEach();
-  
+
   trex.changeAnimation("running", trex_running);
-  
+
   score = 0;
 }
